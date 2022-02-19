@@ -1,14 +1,18 @@
 package avaliacao2.questao9;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Produto {
-
+public class Produto implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nome;
 	private String descricao;
 	private Double desconto;
 	private Date data;
+	
+	public Produto() {
+	}
 	
 	public Produto(Integer id, String nome, String descricao, Double desconto, Date data) {
 		this.id = id;
