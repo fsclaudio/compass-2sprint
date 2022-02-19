@@ -16,11 +16,12 @@ public class EmotionDAO {
 	}
 	
 	public void Salvar(Emotion emotion) throws SQLException {
-		String sql = "INSERT INTO EMOTION (EMOCAO) VALUES (?)";
+		String sql = "INSERT INTO EMOTION (EMOCAO,DATA) VALUES (?,?)";
 
 		try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 			pstm.setString(1, emotion.getEmocao());
+			pstm.setDate(2, Date.valueOf(java.time.LocalDate.now()));
 			
 
 			pstm.execute();
