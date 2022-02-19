@@ -107,7 +107,6 @@ public class TesteProduto {
 		try (Connection connection = new ConnectionFactory().createConnection()) {
 
 			ProdutoDAO produtoDAO = new ProdutoDAO(connection);
-			produtoDAO.listar();
 
 			List<Produto> listaProd = produtoDAO.listar();
 
