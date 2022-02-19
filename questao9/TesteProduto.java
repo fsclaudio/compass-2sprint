@@ -36,8 +36,9 @@ public class TesteProduto {
 		String desc = entrada.nextLine();
 
 		System.out.println("Digite a valor do produto:");
-		double valor = entrada.nextDouble();
+		String preco = entrada.nextLine();
 		
+		double valor = Double.valueOf(preco);
 		Produto produto = new Produto(nome, desc, valor);
 
 		try (Connection connection = new ConnectionFactory().createConnection()) {

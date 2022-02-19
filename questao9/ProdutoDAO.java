@@ -33,6 +33,8 @@ public class ProdutoDAO {
 				while (rst.next()) {
 					produto.setId(rst.getInt(1));
 				}
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -51,7 +53,7 @@ public class ProdutoDAO {
 							rst.getDate(5));
 					produtos.add(produto);
 				}
-			}catch (SQLException e) {
+			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -91,11 +93,11 @@ public class ProdutoDAO {
 			System.out.println("Numero de Registros deletados= " + LinhasAfetadas);
 
 		} catch (SQLException e) {
-			e.getMessage();
+			throw new RuntimeException(e);
 		}
 	}
 
-	public void alterar(String nome, String descricao,double desconto, Integer id) throws SQLException {
+	public void alterar(String nome, String descricao, double desconto, Integer id) throws SQLException {
 		try (PreparedStatement stm = connection
 				.prepareStatement("UPDATE PRODUTO  SET NOME = ?, DESCRICAO = ?, DESCONTO = ? WHERE ID = ?")) {
 			stm.setString(1, nome);
@@ -105,7 +107,7 @@ public class ProdutoDAO {
 			stm.executeUpdate();
 		}
 	}
-	
+
 	public boolean existId(Integer id) throws SQLException {
 		String sql = "SELECT ID FROM PRODUTO WHERE ID = ?";
 
@@ -119,6 +121,8 @@ public class ProdutoDAO {
 					return false;
 				}
 			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
