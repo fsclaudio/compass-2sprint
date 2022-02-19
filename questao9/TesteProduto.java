@@ -17,6 +17,7 @@ public class TesteProduto {
 		System.out.println("2. Atualizar uma oferta");
 		System.out.println("3. Deletar uma oferta");
 		System.out.println("4. Listar nome que contem?");
+		System.out.println("5. Listar todos produtos");
 		System.out.println("0. Sair");
 		System.out.println("Opcao:");
 	}
@@ -102,6 +103,18 @@ public class TesteProduto {
 			}
 		}
 	}
+	private static void listaAll() throws SQLException {
+		try (Connection connection = new ConnectionFactory().createConnection()) {
+
+			ProdutoDAO produtoDAO = new ProdutoDAO(connection);
+			produtoDAO.listar();
+
+			List<Produto> listaProd = produtoDAO.listar();
+
+			listaProd.stream().forEach(lp -> System.out.println(lp));
+		}
+		
+	}
 
 	public static void consulta() throws SQLException {
 		Scanner entradacon = new Scanner(System.in);
@@ -175,6 +188,10 @@ public class TesteProduto {
 				consulta();
 				break;
 
+			case 5:
+				listaAll();
+				break;
+				
 			default:
 				System.out.println("Opção inválida.");
 			}

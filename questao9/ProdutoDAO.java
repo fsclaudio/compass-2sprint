@@ -51,6 +51,8 @@ public class ProdutoDAO {
 							rst.getDate(5));
 					produtos.add(produto);
 				}
+			}catch (SQLException e) {
+				throw new RuntimeException(e);
 			}
 		}
 		return produtos;
