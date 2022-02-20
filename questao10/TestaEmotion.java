@@ -1,12 +1,11 @@
 package avaliacao2.questao10;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class TestaEmotion {
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) {
 
 		Scanner entrada = new Scanner(System.in);
 
@@ -20,6 +19,8 @@ public class TestaEmotion {
 			String frase = entrada.nextLine();
 			emo.selecEmotion(frase);
 			emotionDAO.Salvar(emo);
+		}catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
 	}

@@ -15,7 +15,7 @@ public class EmotionDAO {
 		this.connection = connection;
 	}
 	
-	public void Salvar(Emotion emotion) throws SQLException {
+	public void Salvar(Emotion emotion)  {
 		String sql = "INSERT INTO EMOTION (EMOCAO,DATA) VALUES (?,?)";
 
 		try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -31,6 +31,8 @@ public class EmotionDAO {
 					emotion.setId(rst.getInt(1));
 				}
 			}
+		}catch (SQLException e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 

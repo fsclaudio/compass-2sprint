@@ -17,7 +17,7 @@ public class ProdutoDAO {
 		this.connection = connection;
 	}
 
-	public void Salvar(Produto produto) throws SQLException {
+	public void Salvar(Produto produto) {
 		String sql = "INSERT INTO PRODUTO (NOME , DESCRICAO,DESCONTO,DATA) VALUES (?,?,?,?)";
 
 		try (PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -34,8 +34,10 @@ public class ProdutoDAO {
 					produto.setId(rst.getInt(1));
 				}
 			} catch (SQLException e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException(e.getMessage());
 			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -54,13 +56,13 @@ public class ProdutoDAO {
 					produtos.add(produto);
 				}
 			} catch (SQLException e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException(e.getMessage());
 			}
 		}
 		return produtos;
 	}
 
-	public List<Produto> listebusca(String n) throws SQLException {
+	public List<Produto> listebusca(String n) {
 		List<Produto> produtos = new ArrayList<Produto>();
 		String sql = "SELECT * FROM PRODUTO WHERE NOME LIKE ? ";
 
@@ -76,11 +78,13 @@ public class ProdutoDAO {
 					produtos.add(produto);
 				}
 			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e.getMessage());
 		}
 		return produtos;
 	}
 
-	public void delete(Integer id) throws SQLException {
+	public void delete(Integer id) {
 		String sql = "DELETE FROM PRODUTO WHERE ID = ?";
 
 		try (PreparedStatement pstm = connection.prepareStatement(sql)) {
@@ -93,11 +97,11 @@ public class ProdutoDAO {
 			System.out.println("Numero de Registros deletados= " + LinhasAfetadas);
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
-	public void alterar(String nome, String descricao, double desconto, Integer id) throws SQLException {
+	public void alterar(String nome, String descricao, double desconto, Integer id) {
 		try (PreparedStatement stm = connection
 				.prepareStatement("UPDATE PRODUTO  SET NOME = ?, DESCRICAO = ?, DESCONTO = ? WHERE ID = ?")) {
 			stm.setString(1, nome);
@@ -105,10 +109,29 @@ public class ProdutoDAO {
 			stm.setDouble(3, desconto);
 			stm.setInt(4, id);
 			stm.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
-	public boolean existId(Integer id) throws SQLException {
+	public Produto findById(Integer id) {
+		try (PreparedStatement stm = connection.prepareStatement("SELECT * FROM PRODUTO WHERE ID= ?")) {
+			stm.setInt(1, id);
+			stm.execute();
+			try (ResultSet rst = stm.getResultSet();) {
+				while (rst.next()) {
+					Produto produto = new Produto(rst.getInt(1), rst.getString(2), rst.getString(3), rst.getDouble(4),
+							rst.getDate(5));
+					return produto;
+				}
+				return null;
+			} 
+		} catch (SQLException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	public boolean existId(Integer id) {
 		String sql = "SELECT ID FROM PRODUTO WHERE ID = ?";
 
 		try (PreparedStatement pstm = connection.prepareStatement(sql)) {
@@ -122,7 +145,7 @@ public class ProdutoDAO {
 				}
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 

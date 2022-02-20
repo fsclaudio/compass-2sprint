@@ -12,7 +12,7 @@ public class TesteProduto {
 	public static void menu() {
 		System.out.println("\t===========CFS SYSTEM==========");
 		System.out.println();
-		System.out.println("\tDigite a opção desejada");
+		System.out.println("\t Digite a opção desejada");
 		System.out.println("1. Inserir uma oferta");
 		System.out.println("2. Atualizar uma oferta");
 		System.out.println("3. Deletar uma oferta");
@@ -145,7 +145,7 @@ public class TesteProduto {
 		products.add(new Produto("Celular", "Motorola 128GB", 335.60));
 		products.add(new Produto("Celular", "Sansung 128GB", 150.50));
 		products.add(new Produto("Radio", "Radio Rlogioe", 50.60));
-		products.add(new Produto("Celular", "LG 64GB", 235.60));
+		products.add(new Produto("Camera", "Camera Fotografica", 235.60));
 		for (int i = 0; i < 3; i++) {
 			Collections.shuffle(products);
 			Produto produto = new Produto(products.get(i).getNome(), products.get(i).getDescricao(),
