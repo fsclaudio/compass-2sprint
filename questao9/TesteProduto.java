@@ -24,6 +24,12 @@ public class TesteProduto {
 
 	static ArrayList<Produto> products = new ArrayList<Produto>();
 
+	public static ProdutoDAO createProductDaoConn() {
+		Connection connection = new ConnectionFactory().createConnection();
+		ProdutoDAO produtoDAO = new ProdutoDAO(connection);
+		return produtoDAO;
+	}
+
 	public static void inclui() throws SQLException {
 
 		Scanner entrada = new Scanner(System.in);
@@ -37,19 +43,16 @@ public class TesteProduto {
 
 		System.out.println("Digite a valor do produto:");
 		String preco = entrada.nextLine();
-		
+
 		double valor = Double.valueOf(preco);
 		Produto produto = new Produto(nome, desc, valor);
 
-		try (Connection connection = new ConnectionFactory().createConnection()) {
+		createProductDaoConn().Salvar(produto);
+		insert3products();
 
-			ProdutoDAO produtoDAO = new ProdutoDAO(connection);
-			produtoDAO.Salvar(produto);
-			insert3products();
-			List<Produto> listaProd = produtoDAO.listar();
+		List<Produto> listaProd = createProductDaoConn().listar();
 
-			listaProd.stream().forEach(lp -> System.out.println(lp));
-		}
+		listaProd.stream().forEach(lp -> System.out.println(lp));
 	}
 
 	public static void altera() throws SQLException {
@@ -66,25 +69,21 @@ public class TesteProduto {
 
 		System.out.println("Digite a valor do produto:");
 		String custo = entradaalt.nextLine();
-		
-		double valor = Double.valueOf(custo); 
+
+		double valor = Double.valueOf(custo);
 		Integer id = Integer.valueOf(strid);
 		Produto produto = new Produto(nome, desc, valor);
 
-		try (Connection connection = new ConnectionFactory().createConnection()) {
-
-			ProdutoDAO produtoDAO = new ProdutoDAO(connection);
-			if (produtoDAO.existId(id)) {
-				produtoDAO.alterar(produto.getNome(), produto.getDescricao(), produto.getDesconto(), id);
-			} else {
-				produtoDAO.Salvar(produto);
-				insert3products();
-			}
-
-			List<Produto> listaProd = produtoDAO.listar();
-
-			listaProd.stream().forEach(lp -> System.out.println(lp));
+		if (createProductDaoConn().existId(id)) {
+			createProductDaoConn().alterar(produto.getNome(), produto.getDescricao(), produto.getDesconto(), id);
+		} else {
+			createProductDaoConn().Salvar(produto);
+			insert3products();
 		}
+
+		List<Produto> listaProd = createProductDaoConn().listar();
+
+		listaProd.stream().forEach(lp -> System.out.println(lp));
 	}
 
 	public static void excluir() throws SQLException {
@@ -93,27 +92,18 @@ public class TesteProduto {
 		System.out.println("Digite o id do Produto:");
 		int id = entradaexc.nextInt();
 
-		try (Connection connection = new ConnectionFactory().createConnection()) {
-
-			ProdutoDAO produtoDAO = new ProdutoDAO(connection);
-
-			if (produtoDAO.existId(id)) {
-				produtoDAO.delete(id);
-			} else {
-				System.out.println("Produto de ID " + id + " Não exite!");
-			}
+		if (createProductDaoConn().existId(id)) {
+			createProductDaoConn().delete(id);
+		} else {
+			System.out.println("Produto de ID " + id + " Não exite!");
 		}
 	}
+
 	private static void listaAll() throws SQLException {
-		try (Connection connection = new ConnectionFactory().createConnection()) {
 
-			ProdutoDAO produtoDAO = new ProdutoDAO(connection);
+		List<Produto> listaProd = createProductDaoConn().listar();
 
-			List<Produto> listaProd = produtoDAO.listar();
-
-			listaProd.stream().forEach(lp -> System.out.println(lp));
-		}
-		
+		listaProd.stream().forEach(lp -> System.out.println(lp));
 	}
 
 	public static void consulta() throws SQLException {
@@ -125,15 +115,10 @@ public class TesteProduto {
 
 		Produto produto = new Produto(nome);
 
-		try (Connection connection = new ConnectionFactory().createConnection()) {
+		List<Produto> listaProd = createProductDaoConn().listebusca(produto.getNome());
 
-			ProdutoDAO produtoDAO = new ProdutoDAO(connection);
-			produtoDAO.listebusca(produto.getNome());
+		listaProd.stream().forEach(lp -> System.out.println(lp));
 
-			List<Produto> listaProd = produtoDAO.listebusca(produto.getNome());
-
-			listaProd.stream().forEach(lp -> System.out.println(lp));
-		}
 	}
 
 	public static void insert3products() {
@@ -150,15 +135,7 @@ public class TesteProduto {
 			Collections.shuffle(products);
 			Produto produto = new Produto(products.get(i).getNome(), products.get(i).getDescricao(),
 					products.get(i).getDesconto());
-
-			try (Connection connection = new ConnectionFactory().createConnection()) {
-
-				ProdutoDAO produtoDAO = new ProdutoDAO(connection);
-				produtoDAO.Salvar(produto);
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			createProductDaoConn().Salvar(produto);
 		}
 	}
 
@@ -191,7 +168,7 @@ public class TesteProduto {
 			case 5:
 				listaAll();
 				break;
-				
+
 			default:
 				System.out.println("Opção inválida.");
 			}
